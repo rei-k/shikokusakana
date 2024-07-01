@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}釣りアプリ{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- SEO対策用メタタグ -->
+    <meta name="description" content="釣りアプリで季節ごとの釣り情報を簡単にチェックできます。">
+    <meta name="keywords" content="釣り, 魚, 季節, 釣り道具, 釣りスポット">
+    <!-- ファビコン -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+</head>
+<body>
+    <!-- ヘッダーセクション -->
+    <header class="header bg-primary text-white text-center py-3">
+        <h1>釣りアプリ</h1>
+    </header>
+    
+    <!-- ナビゲーションバー -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">釣りアプリ</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">ホーム</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'fish' and request.view_args.season == 'all' %}active{% endif %}" href="{{ url_for('fish', season='all') }}">全ての季節</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'fish' and request.view_args.season == '春' %}active{% endif %}" href="{{ url_for('fish', season='春') }}">春</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'fish' and request.view_args.season == '夏' %}active{% endif %}" href="{{ url_for('fish', season='夏') }}">夏</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'fish' and request.view_args.season == '秋' %}active{% endif %}" href="{{ url_for('fish', season='秋') }}">秋</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'fish' and request.view_args.season == '冬' %}active{% endif %}" href="{{ url_for('fish', season='冬') }}">冬</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- メインコンテンツセクション -->
+    <main class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- フッターセクション -->
+    <footer class="footer mt-auto py-3 bg-light text-center">
+        <div class="container">
+            <span class="text-muted">&copy; 2024 釣りアプリ</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS と依存関係 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
+    <!-- カスタムスクリプト -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>
